@@ -50,12 +50,12 @@ const SKILL_GROUPS = [
   {
     category: 'Business & Operations',
     icon: Briefcase,
-    skills: ['CRM', 'Public Relations', 'Negotiation', 'Project Management', 'Change Management'],
+    skills: ['Microsoft Excel & Word', 'QuickBooks / AR-AP', 'CRM', 'Project Management', 'Invoice & Vendor Management'],
   },
   {
     category: 'Approach',
     icon: Sparkles,
-    skills: ['Problem Solving', 'Attention to Detail', 'Clear Communication'],
+    skills: ['Problem Solving', 'Attention to Detail', 'Adaptability', 'Clear Communication'],
   },
 ];
 
@@ -63,32 +63,27 @@ const JOURNEY = [
   {
     year: '2017',
     title: 'Administrative Manager, De Charlotte Farms',
-    description: 'Ran day-to-day operations and payroll for a farm business in Nigeria, my first taste of systems and process thinking.',
-  },
-  {
-    year: '2020',
-    title: 'Foreign Exchange Trader',
-    description: 'Traded FX independently for four years, sharpening analytical, data-driven decision-making under uncertainty.',
+    description: 'Led HR, compliance, and day-to-day farm operations in Nigeria, including payroll and financial reporting.',
   },
   {
     year: '2021',
-    title: 'Moved to BC, studied Horticulture & Business',
-    description: 'Began a cross-disciplinary path at Kwantlen Polytechnic University spanning horticulture and business administration.',
+    title: 'Started Horticulture diploma, Kwantlen Polytechnic',
+    description: 'Moved to BC and began a diploma in Horticulture and General Studies, completed in 2024.',
+  },
+  {
+    year: '2022',
+    title: 'Front Desk Support Worker, Atira Property Management',
+    description: 'Supported tenants as their main point of contact, resolving issues and advocating for their rights.',
   },
   {
     year: '2024',
-    title: 'Founded 9ILE',
-    description: "Launched 9ILE, a Nigerian super app combining messaging, payments, and video conferencing for 100M+ Nigerians.",
-  },
-  {
-    year: '2024',
-    title: 'Operations & PR experience',
-    description: 'Took on auto lease administration and public relations work, building hands-on operational and CRM experience.',
+    title: 'Founded 9ILE & joined Waypoint (Navacord)',
+    description: 'Launched 9ILE while starting as an Auto Leasing Administrator at Waypoint, later advancing to Insurance Agent.',
   },
   {
     year: 'Now',
-    title: 'Learning SQL & data analytics',
-    description: 'Applying everything I’ve learned to dashboards and queries, while open to Reporting / Business Systems Analyst roles in BC.',
+    title: 'Pursuing a Google Analytics & SQL Certificate',
+    description: 'Working through Google’s Analytics & SQL certificate, applying it to dashboards and queries, while open to Reporting / Business Systems Analyst roles in BC.',
   },
 ];
 
@@ -143,11 +138,10 @@ const BLOG_POSTS = [
   },
 ];
 
-// TODO: replace the email placeholder with your real address.
 const SOCIAL_LINKS = {
-  github: '#',
+  github: 'https://github.com/chriztool',
   linkedin: 'https://www.linkedin.com/in/chriztool',
-  email: 'mailto:',
+  email: 'mailto:ogemdichris@yahoo.com',
 };
 
 function useScrollSpy(ids) {
@@ -363,7 +357,7 @@ export default function Portfolio() {
               Data Analytics & SQL
             </h1>
             <p className="text-xl md:text-2xl text-stone-600 dark:text-stone-300 mb-10">
-              Founder of 9ILE, transitioning into data analytics. Building dashboards, writing queries, solving data problems.
+              Founder of 9ILE, currently completing a Google Analytics & SQL certificate. Building dashboards, writing queries, solving data problems.
             </p>
             <div className="flex gap-4 justify-center flex-wrap mb-10">
               <button
@@ -380,7 +374,7 @@ export default function Portfolio() {
               </button>
             </div>
             <div className="flex justify-center gap-6 mb-16">
-              <a href={SOCIAL_LINKS.github} className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition">
+              <a href={SOCIAL_LINKS.github} target="_blank" rel="noreferrer" className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition">
                 <Github size={26} />
               </a>
               <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noreferrer" className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition">
@@ -419,18 +413,21 @@ export default function Portfolio() {
             <Reveal className="md:col-span-2">
               <div className="space-y-5 text-stone-600 dark:text-stone-300 text-lg leading-relaxed">
                 <p>
-                  I'm Christian Agbugba, based in Surrey, BC. By day I work in insurance and operations administration;
-                  outside of that, I'm the Founder &amp; CEO of 9ILE, a Nigerian super app bringing messaging, payments,
-                  and video conferencing to over 100 million Nigerians.
+                  I'm Christian Agbugba, based in Metro Vancouver, BC. By day I work as an Insurance Agent at Waypoint
+                  (Navacord), advising clients on auto insurance and leasing; outside of that, I'm the Founder &amp; CEO
+                  of 9ILE, a Nigerian super app bringing messaging, payments, and video conferencing to over 100 million
+                  Nigerians.
                 </p>
                 <p>
-                  I'm now expanding into data analytics, leveraging SQL, database querying, and visualization to turn the
-                  operational and business experience I've built into data-driven decision making.
+                  I'm currently working through Google's Analytics &amp; SQL certificate, applying SQL, database
+                  querying, and visualization to turn my operational and business experience into data-driven
+                  decision making.
                 </p>
                 <p>
-                  My background spans horticulture, business administration, FX trading, and cooperative PR work, a
-                  cross-disciplinary foundation that shapes how I approach systems thinking and problem solving. I'm
-                  targeting Reporting Analyst / Business Systems Analyst roles in BC, while continuing to grow 9ILE.
+                  My background spans a horticulture diploma from Kwantlen Polytechnic University, property management,
+                  agricultural cooperative work, and insurance operations, a cross-disciplinary foundation that shapes
+                  how I approach systems thinking and problem solving. I'm targeting Reporting Analyst / Business
+                  Systems Analyst roles in BC, while continuing to grow 9ILE.
                 </p>
               </div>
             </Reveal>
@@ -438,15 +435,15 @@ export default function Portfolio() {
               <div className="p-6 bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl space-y-4">
                 <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
                   <MapPin size={18} className="text-amber-700 dark:text-amber-400" />
-                  <span className="text-sm">Surrey, British Columbia</span>
+                  <span className="text-sm">Metro Vancouver, BC</span>
                 </div>
                 <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
                   <Briefcase size={18} className="text-amber-700 dark:text-amber-400" />
-                  <span className="text-sm">Founder &amp; CEO, 9ILE</span>
+                  <span className="text-sm">Insurance Agent, Waypoint &amp; Founder/CEO, 9ILE</span>
                 </div>
                 <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
                   <Sparkles size={18} className="text-amber-700 dark:text-amber-400" />
-                  <span className="text-sm">Currently deep in SQL practice</span>
+                  <span className="text-sm">Pursuing Google Analytics &amp; SQL Certificate</span>
                 </div>
               </div>
             </Reveal>
@@ -602,7 +599,7 @@ export default function Portfolio() {
                   <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition">
                     <Linkedin size={18} /> <span className="text-sm">LinkedIn</span>
                   </a>
-                  <a href={SOCIAL_LINKS.github} className="flex items-center gap-3 text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition">
+                  <a href={SOCIAL_LINKS.github} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition">
                     <Github size={18} /> <span className="text-sm">GitHub</span>
                   </a>
                 </div>
