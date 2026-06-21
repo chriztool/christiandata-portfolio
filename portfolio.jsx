@@ -31,7 +31,7 @@ const NAV_LINKS = [
 
 const STATS = [
   { label: 'Founded', value: '9ILE' },
-  { label: 'Based in', value: 'Surrey, BC' },
+  { label: 'Based in', value: 'Burnaby, BC' },
   { label: 'Focus', value: 'SQL & Analytics' },
   { label: 'Status', value: 'Open to work' },
 ];
@@ -284,12 +284,20 @@ export default function Portfolio() {
         <div className="absolute top-1/2 -left-40 w-96 h-96 bg-amber-300/10 dark:bg-amber-700/10 rounded-full blur-3xl" />
       </div>
 
+      <button
+        onClick={toggleTheme}
+        aria-label="Toggle light and dark mode"
+        className="fixed top-4 left-4 z-[60] w-11 h-11 rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 shadow-md flex items-center justify-center text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 hover:border-amber-400 transition"
+      >
+        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+      </button>
+
       <nav className="fixed top-0 w-full bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <button
               onClick={() => scrollToSection('home')}
-              className="text-2xl font-bold bg-gradient-to-r from-amber-700 to-amber-500 dark:from-amber-400 dark:to-amber-300 bg-clip-text text-transparent"
+              className="text-2xl font-bold bg-gradient-to-r from-amber-700 to-amber-500 dark:from-amber-400 dark:to-amber-300 bg-clip-text text-transparent pl-12 md:pl-0"
             >
               Christian Agbugba
             </button>
@@ -308,23 +316,9 @@ export default function Portfolio() {
                   {link.label}
                 </button>
               ))}
-              <button
-                onClick={toggleTheme}
-                aria-label="Toggle light and dark mode"
-                className="w-9 h-9 rounded-lg border border-stone-300 dark:border-stone-700 flex items-center justify-center text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 hover:border-amber-400 transition"
-              >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
             </div>
 
             <div className="flex items-center gap-3 md:hidden">
-              <button
-                onClick={toggleTheme}
-                aria-label="Toggle light and dark mode"
-                className="w-9 h-9 rounded-lg border border-stone-300 dark:border-stone-700 flex items-center justify-center text-stone-600 dark:text-stone-300"
-              >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -413,7 +407,7 @@ export default function Portfolio() {
             <Reveal className="md:col-span-2">
               <div className="space-y-5 text-stone-600 dark:text-stone-300 text-lg leading-relaxed">
                 <p>
-                  I'm Christian Agbugba, based in Metro Vancouver, BC. By day I work as an Insurance Agent at Waypoint
+                  I'm Christian Agbugba, based in Burnaby, BC. By day I work as an Insurance Agent at Waypoint
                   (Navacord), advising clients on auto insurance and leasing; outside of that, I'm the Founder &amp; CEO
                   of 9ILE, a Nigerian super app bringing messaging, payments, and video conferencing to over 100 million
                   Nigerians.
@@ -435,7 +429,7 @@ export default function Portfolio() {
               <div className="p-6 bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl space-y-4">
                 <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
                   <MapPin size={18} className="text-amber-700 dark:text-amber-400" />
-                  <span className="text-sm">Metro Vancouver, BC</span>
+                  <span className="text-sm">Burnaby, BC</span>
                 </div>
                 <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
                   <Briefcase size={18} className="text-amber-700 dark:text-amber-400" />
