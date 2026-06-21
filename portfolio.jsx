@@ -13,10 +13,15 @@ import {
   Sparkles,
   MapPin,
   Briefcase,
+  Sun,
+  Moon,
+  Rocket,
+  Users,
 } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'About', id: 'about' },
+  { label: 'Ventures', id: 'ventures' },
   { label: 'Skills', id: 'skills' },
   { label: 'Journey', id: 'journey' },
   { label: 'Projects', id: 'projects' },
@@ -25,8 +30,8 @@ const NAV_LINKS = [
 ];
 
 const STATS = [
-  { label: 'Projects shipped', value: '3+' },
-  { label: 'Based in', value: 'Vancouver, BC' },
+  { label: 'Founded', value: '9ILE' },
+  { label: 'Based in', value: 'Surrey, BC' },
   { label: 'Focus', value: 'SQL & Analytics' },
   { label: 'Status', value: 'Open to work' },
 ];
@@ -43,6 +48,11 @@ const SKILL_GROUPS = [
     skills: ['Mode Analytics', 'Dashboards', 'Reporting', 'Data Visualization'],
   },
   {
+    category: 'Business & Operations',
+    icon: Briefcase,
+    skills: ['CRM', 'Public Relations', 'Negotiation', 'Project Management', 'Change Management'],
+  },
+  {
     category: 'Approach',
     icon: Sparkles,
     skills: ['Problem Solving', 'Attention to Detail', 'Clear Communication'],
@@ -51,24 +61,34 @@ const SKILL_GROUPS = [
 
 const JOURNEY = [
   {
+    year: '2017',
+    title: 'Administrative Manager, De Charlotte Farms',
+    description: 'Ran day-to-day operations and payroll for a farm business in Nigeria, my first taste of systems and process thinking.',
+  },
+  {
+    year: '2020',
+    title: 'Foreign Exchange Trader',
+    description: 'Traded FX independently for four years, sharpening analytical, data-driven decision-making under uncertainty.',
+  },
+  {
+    year: '2021',
+    title: 'Moved to BC, studied Horticulture & Business',
+    description: 'Began a cross-disciplinary path at Kwantlen Polytechnic University spanning horticulture and business administration.',
+  },
+  {
     year: '2024',
-    title: 'Office administration',
-    description: 'Working in business operations day to day, getting curious about the data behind the numbers.',
+    title: 'Founded 9ILE',
+    description: "Launched 9ILE, a Nigerian super app combining messaging, payments, and video conferencing for 100M+ Nigerians.",
   },
   {
-    year: '2025',
-    title: 'Started learning SQL',
-    description: 'Began hands-on practice with queries, joins, and relational databases.',
-  },
-  {
-    year: '2026',
-    title: 'Building real projects',
-    description: 'Shipped dashboards and case studies, applying SQL to real business questions.',
+    year: '2024',
+    title: 'Operations & PR experience',
+    description: 'Took on auto lease administration and public relations work, building hands-on operational and CRM experience.',
   },
   {
     year: 'Now',
-    title: 'Open to opportunities',
-    description: 'Looking for Reporting Analyst / Business Systems Analyst roles in BC.',
+    title: 'Learning SQL & data analytics',
+    description: 'Applying everything I’ve learned to dashboards and queries, while open to Reporting / Business Systems Analyst roles in BC.',
   },
 ];
 
@@ -109,9 +129,9 @@ const BLOG_POSTS = [
   },
   {
     id: 2,
-    title: 'From Admin to Analyst: My Transition Journey',
+    title: 'From Founder to Analyst: My Transition Journey',
     date: 'Coming Soon',
-    excerpt: 'How I transitioned from office administration to data analytics in 6 months.',
+    excerpt: 'How building a startup and working in operations led me to data analytics.',
     tags: ['Career', 'Learning'],
   },
   {
@@ -123,9 +143,10 @@ const BLOG_POSTS = [
   },
 ];
 
+// TODO: replace the email placeholder with your real address.
 const SOCIAL_LINKS = {
   github: '#',
-  linkedin: '#',
+  linkedin: 'https://www.linkedin.com/in/chriztool',
   email: 'mailto:',
 };
 
@@ -196,10 +217,30 @@ function Reveal({ children, className = '', delay = 0 }) {
 function SectionHeading({ eyebrow, title }) {
   return (
     <div className="mb-12">
-      <p className="text-cyan-400 font-semibold tracking-wide text-sm uppercase mb-2">{eyebrow}</p>
-      <h2 className="text-3xl md:text-4xl font-bold text-white">{title}</h2>
+      <p className="text-amber-700 dark:text-amber-400 font-semibold tracking-wide text-sm uppercase mb-2">{eyebrow}</p>
+      <h2 className="text-3xl md:text-4xl font-bold text-stone-900 dark:text-white">{title}</h2>
     </div>
   );
+}
+
+function useTheme() {
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    const stored = typeof window !== 'undefined' ? window.localStorage.getItem('theme') : null;
+    const initial = stored || 'light';
+    setTheme(initial);
+    document.documentElement.classList.toggle('dark', initial === 'dark');
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    document.documentElement.classList.toggle('dark', next === 'dark');
+    window.localStorage.setItem('theme', next);
+  };
+
+  return [theme, toggleTheme];
 }
 
 export default function Portfolio() {
@@ -207,6 +248,7 @@ export default function Portfolio() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [theme, toggleTheme] = useTheme();
 
   const sectionIds = ['home', ...NAV_LINKS.map((l) => l.id)];
   const activeSection = useScrollSpy(sectionIds);
@@ -229,6 +271,7 @@ export default function Portfolio() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    // Form submission via Formspree (free service)
     fetch('https://formspree.io/f/YOUR_FORM_ID', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -241,41 +284,57 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white font-sans">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-sans transition-colors duration-300">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-400/10 dark:bg-amber-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-amber-300/10 dark:bg-amber-700/10 rounded-full blur-3xl" />
       </div>
 
-      <nav className="fixed top-0 w-full bg-slate-900/90 backdrop-blur-md border-b border-slate-800 z-50">
+      <nav className="fixed top-0 w-full bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <button
               onClick={() => scrollToSection('home')}
-              className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
+              className="text-2xl font-bold bg-gradient-to-r from-amber-700 to-amber-500 dark:from-amber-400 dark:to-amber-300 bg-clip-text text-transparent"
             >
-              Christian Data
+              Christian Agbugba
             </button>
 
-            <div className="hidden md:flex gap-8">
+            <div className="hidden md:flex items-center gap-6">
               {NAV_LINKS.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => scrollToSection(link.id)}
                   className={`text-sm font-medium transition pb-1 border-b-2 ${
                     activeSection === link.id
-                      ? 'text-cyan-400 border-cyan-400'
-                      : 'text-slate-300 border-transparent hover:text-cyan-400'
+                      ? 'text-amber-700 dark:text-amber-400 border-amber-700 dark:border-amber-400'
+                      : 'text-stone-600 dark:text-stone-300 border-transparent hover:text-amber-700 dark:hover:text-amber-400'
                   }`}
                 >
                   {link.label}
                 </button>
               ))}
+              <button
+                onClick={toggleTheme}
+                aria-label="Toggle light and dark mode"
+                className="w-9 h-9 rounded-lg border border-stone-300 dark:border-stone-700 flex items-center justify-center text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 hover:border-amber-400 transition"
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
             </div>
 
-            <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <div className="flex items-center gap-3 md:hidden">
+              <button
+                onClick={toggleTheme}
+                aria-label="Toggle light and dark mode"
+                className="w-9 h-9 rounded-lg border border-stone-300 dark:border-stone-700 flex items-center justify-center text-stone-600 dark:text-stone-300"
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
 
           {mobileMenuOpen && (
@@ -284,7 +343,7 @@ export default function Portfolio() {
                 <button
                   key={link.id}
                   onClick={() => scrollToSection(link.id)}
-                  className="block w-full text-left px-4 py-2 text-slate-300 hover:text-cyan-400 hover:bg-slate-800 rounded"
+                  className="block w-full text-left px-4 py-2 text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded"
                 >
                   {link.label}
                 </button>
@@ -297,43 +356,43 @@ export default function Portfolio() {
       <main className="relative">
         <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-16">
           <div className="text-center max-w-3xl">
-            <p className="text-cyan-400 font-semibold tracking-wide text-sm uppercase mb-4">
+            <p className="text-amber-700 dark:text-amber-400 font-semibold tracking-wide text-sm uppercase mb-4">
               Hi, I'm Christian
             </p>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 dark:from-amber-300 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
               Data Analytics & SQL
             </h1>
-            <p className="text-xl md:text-2xl text-slate-300 mb-10">
-              Transitioning from admin to analytics. Building dashboards, writing queries, solving data problems.
+            <p className="text-xl md:text-2xl text-stone-600 dark:text-stone-300 mb-10">
+              Founder of 9ILE, transitioning into data analytics. Building dashboards, writing queries, solving data problems.
             </p>
             <div className="flex gap-4 justify-center flex-wrap mb-10">
               <button
                 onClick={() => scrollToSection('projects')}
-                className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-semibold transition"
+                className="px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-semibold transition"
               >
                 View Projects
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="px-8 py-3 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 rounded-lg font-semibold transition"
+                className="px-8 py-3 border-2 border-amber-600 text-amber-700 dark:text-amber-400 dark:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-400/10 rounded-lg font-semibold transition"
               >
                 Get in Touch
               </button>
             </div>
             <div className="flex justify-center gap-6 mb-16">
-              <a href={SOCIAL_LINKS.github} className="text-slate-400 hover:text-cyan-400 transition">
+              <a href={SOCIAL_LINKS.github} className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition">
                 <Github size={26} />
               </a>
-              <a href={SOCIAL_LINKS.linkedin} className="text-slate-400 hover:text-cyan-400 transition">
+              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noreferrer" className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition">
                 <Linkedin size={26} />
               </a>
-              <a href={SOCIAL_LINKS.email} className="text-slate-400 hover:text-cyan-400 transition">
+              <a href={SOCIAL_LINKS.email} className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition">
                 <Mail size={26} />
               </a>
             </div>
             <button
               onClick={() => scrollToSection('about')}
-              className="text-slate-500 hover:text-cyan-400 transition animate-bounce"
+              className="text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition animate-bounce"
               aria-label="Scroll to About section"
             >
               <ArrowDown size={24} />
@@ -341,12 +400,12 @@ export default function Portfolio() {
           </div>
         </section>
 
-        <section className="border-y border-slate-800 bg-slate-800/30">
+        <section className="border-y border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-800/30">
           <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {STATS.map((stat) => (
               <div key={stat.label}>
-                <div className="text-2xl md:text-3xl font-bold text-cyan-400 mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-400">{stat.label}</div>
+                <div className="text-2xl md:text-3xl font-bold text-amber-700 dark:text-amber-400 mb-1">{stat.value}</div>
+                <div className="text-sm text-stone-500 dark:text-stone-400">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -358,36 +417,35 @@ export default function Portfolio() {
           </Reveal>
           <div className="grid md:grid-cols-3 gap-10">
             <Reveal className="md:col-span-2">
-              <div className="space-y-5 text-slate-300 text-lg leading-relaxed">
+              <div className="space-y-5 text-stone-600 dark:text-stone-300 text-lg leading-relaxed">
                 <p>
-                  I'm Christian, a data analytics professional based in Metro Vancouver, BC. I'm transitioning from
-                  office administration and business roles into data analytics, leveraging SQL, database querying,
-                  and data visualization to help businesses make data-driven decisions.
+                  I'm Christian Agbugba, based in Surrey, BC. By day I work in insurance and operations administration;
+                  outside of that, I'm the Founder &amp; CEO of 9ILE, a Nigerian super app bringing messaging, payments,
+                  and video conferencing to over 100 million Nigerians.
                 </p>
                 <p>
-                  My journey started with curiosity about how data tells stories. Now I'm building that foundation
-                  through hands-on SQL practice, exploring relational databases, and creating dashboards that turn
-                  raw data into actionable insights.
+                  I'm now expanding into data analytics, leveraging SQL, database querying, and visualization to turn the
+                  operational and business experience I've built into data-driven decision making.
                 </p>
                 <p>
-                  I'm targeting roles like Reporting Analyst or Business Systems Analyst with BC public sector
-                  organizations and major regional employers. I'm also interested in entrepreneurship and tech
-                  innovation.
+                  My background spans horticulture, business administration, FX trading, and cooperative PR work, a
+                  cross-disciplinary foundation that shapes how I approach systems thinking and problem solving. I'm
+                  targeting Reporting Analyst / Business Systems Analyst roles in BC, while continuing to grow 9ILE.
                 </p>
               </div>
             </Reveal>
             <Reveal delay={150}>
-              <div className="p-6 bg-slate-800/50 border border-slate-700 rounded-xl space-y-4">
-                <div className="flex items-center gap-3 text-slate-300">
-                  <MapPin size={18} className="text-cyan-400" />
-                  <span className="text-sm">Metro Vancouver, BC</span>
+              <div className="p-6 bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl space-y-4">
+                <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
+                  <MapPin size={18} className="text-amber-700 dark:text-amber-400" />
+                  <span className="text-sm">Surrey, British Columbia</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-300">
-                  <Briefcase size={18} className="text-cyan-400" />
-                  <span className="text-sm">Targeting Reporting / Business Systems Analyst roles</span>
+                <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
+                  <Briefcase size={18} className="text-amber-700 dark:text-amber-400" />
+                  <span className="text-sm">Founder &amp; CEO, 9ILE</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-300">
-                  <Sparkles size={18} className="text-cyan-400" />
+                <div className="flex items-center gap-3 text-stone-600 dark:text-stone-300">
+                  <Sparkles size={18} className="text-amber-700 dark:text-amber-400" />
                   <span className="text-sm">Currently deep in SQL practice</span>
                 </div>
               </div>
@@ -395,25 +453,51 @@ export default function Portfolio() {
           </div>
         </section>
 
+        <section id="ventures" className="max-w-5xl mx-auto px-4 py-24">
+          <Reveal>
+            <SectionHeading eyebrow="Beyond the data" title="Ventures" />
+          </Reveal>
+          <Reveal>
+            <div className="p-8 bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl">
+              <div className="w-12 h-12 rounded-lg bg-amber-600/10 flex items-center justify-center mb-5">
+                <Rocket size={24} className="text-amber-700 dark:text-amber-400" />
+              </div>
+              <h3 className="text-2xl font-semibold text-stone-900 dark:text-white mb-3">9ILE</h3>
+              <p className="text-stone-600 dark:text-stone-300 leading-relaxed mb-5">
+                A Nigerian super app combining messaging, payments, and video conferencing into one platform built for
+                over 100 million Nigerians. My mission is to build the digital infrastructure Nigeria deserves.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-400/10 text-amber-700 dark:text-amber-400 text-xs font-medium rounded-full">
+                  <Users size={14} /> Seeking a Technical Co-Founder (CTO)
+                </span>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-stone-100 dark:bg-stone-700/70 text-stone-600 dark:text-stone-300 text-xs font-medium rounded-full">
+                  Open to investors &amp; advisors
+                </span>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
         <section id="skills" className="max-w-5xl mx-auto px-4 py-24">
           <Reveal>
             <SectionHeading eyebrow="What I work with" title="Skills" />
           </Reveal>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {SKILL_GROUPS.map((group, i) => {
               const Icon = group.icon;
               return (
                 <Reveal key={group.category} delay={i * 100}>
-                  <div className="p-6 bg-slate-800/50 border border-slate-700 rounded-xl h-full hover:border-cyan-400 transition">
-                    <div className="w-11 h-11 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4">
-                      <Icon size={22} className="text-cyan-400" />
+                  <div className="p-6 bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl h-full hover:border-amber-400 transition">
+                    <div className="w-11 h-11 rounded-lg bg-amber-600/10 flex items-center justify-center mb-4">
+                      <Icon size={22} className="text-amber-700 dark:text-amber-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white mb-4">{group.category}</h3>
+                    <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-4">{group.category}</h3>
                     <div className="flex flex-wrap gap-2">
                       {group.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="px-3 py-1 bg-slate-700/70 text-xs rounded-full text-slate-300"
+                          className="px-3 py-1 bg-stone-100 dark:bg-stone-700/70 text-xs rounded-full text-stone-600 dark:text-stone-300"
                         >
                           {skill}
                         </span>
@@ -430,13 +514,13 @@ export default function Portfolio() {
           <Reveal>
             <SectionHeading eyebrow="How I got here" title="My Journey" />
           </Reveal>
-          <div className="relative border-l border-slate-700 ml-3 space-y-10">
+          <div className="relative border-l border-stone-300 dark:border-stone-700 ml-3 space-y-10">
             {JOURNEY.map((step, i) => (
-              <Reveal key={step.title} delay={i * 100} className="relative pl-8">
-                <div className="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full bg-cyan-400 ring-4 ring-slate-900" />
-                <div className="text-cyan-400 text-sm font-semibold mb-1">{step.year}</div>
-                <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
-                <p className="text-slate-300">{step.description}</p>
+              <Reveal key={step.title} delay={i * 80} className="relative pl-8">
+                <div className="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full bg-amber-600 dark:bg-amber-400 ring-4 ring-stone-50 dark:ring-stone-900" />
+                <div className="text-amber-700 dark:text-amber-400 text-sm font-semibold mb-1">{step.year}</div>
+                <h3 className="text-xl font-semibold text-stone-900 dark:text-white mb-2">{step.title}</h3>
+                <p className="text-stone-600 dark:text-stone-300">{step.description}</p>
               </Reveal>
             ))}
           </div>
@@ -449,26 +533,26 @@ export default function Portfolio() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {PROJECTS.map((project, i) => (
               <Reveal key={project.id} delay={i * 100}>
-                <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 h-full hover:border-cyan-400 hover:-translate-y-1 transition duration-300">
+                <div className="bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-6 h-full hover:border-amber-400 hover:-translate-y-1 transition duration-300">
                   <div className="text-4xl mb-4">{project.image}</div>
-                  <h3 className="text-xl font-semibold mb-3 text-cyan-400">{project.title}</h3>
-                  <p className="text-slate-300 mb-4 text-sm leading-relaxed">{project.description}</p>
+                  <h3 className="text-xl font-semibold mb-3 text-amber-700 dark:text-amber-400">{project.title}</h3>
+                  <p className="text-stone-600 dark:text-stone-300 mb-4 text-sm leading-relaxed">{project.description}</p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-slate-700 text-xs rounded-full text-slate-300">
+                      <span key={tag} className="px-3 py-1 bg-stone-100 dark:bg-stone-700 text-xs rounded-full text-stone-600 dark:text-stone-300">
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <a href={project.link} className="text-cyan-400 hover:text-cyan-300 flex items-center gap-2 transition text-sm font-medium">
+                  <a href={project.link} className="text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 flex items-center gap-2 transition text-sm font-medium">
                     View Details <ExternalLink size={14} />
                   </a>
                 </div>
               </Reveal>
             ))}
             <Reveal delay={PROJECTS.length * 100}>
-              <div className="border-2 border-dashed border-slate-700 rounded-xl p-6 h-full flex flex-col items-center justify-center text-center text-slate-400">
-                <Sparkles size={28} className="text-slate-500 mb-3" />
+              <div className="border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-xl p-6 h-full flex flex-col items-center justify-center text-center text-stone-500 dark:text-stone-400">
+                <Sparkles size={28} className="text-stone-400 dark:text-stone-500 mb-3" />
                 <p className="text-sm">More projects coming as I keep building. Check back soon!</p>
               </div>
             </Reveal>
@@ -482,15 +566,15 @@ export default function Portfolio() {
           <div className="space-y-5">
             {BLOG_POSTS.map((post, i) => (
               <Reveal key={post.id} delay={i * 100}>
-                <article className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-cyan-400 transition cursor-pointer">
+                <article className="bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-6 hover:border-amber-400 transition cursor-pointer">
                   <div className="flex justify-between items-start mb-3 gap-4">
-                    <h3 className="text-xl font-semibold text-cyan-400">{post.title}</h3>
-                    <span className="text-slate-400 text-xs whitespace-nowrap mt-1">{post.date}</span>
+                    <h3 className="text-xl font-semibold text-amber-700 dark:text-amber-400">{post.title}</h3>
+                    <span className="text-stone-400 dark:text-stone-500 text-xs whitespace-nowrap mt-1">{post.date}</span>
                   </div>
-                  <p className="text-slate-300 mb-4 text-sm">{post.excerpt}</p>
+                  <p className="text-stone-600 dark:text-stone-300 mb-4 text-sm">{post.excerpt}</p>
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-slate-700 text-xs rounded-full text-slate-300">
+                      <span key={tag} className="px-3 py-1 bg-stone-100 dark:bg-stone-700 text-xs rounded-full text-stone-600 dark:text-stone-300">
                         {tag}
                       </span>
                     ))}
@@ -507,71 +591,71 @@ export default function Portfolio() {
           </Reveal>
           <div className="grid md:grid-cols-5 gap-8">
             <Reveal className="md:col-span-2">
-              <div className="p-6 bg-slate-800/50 border border-slate-700 rounded-xl h-full space-y-6">
-                <p className="text-slate-300 text-sm leading-relaxed">
+              <div className="p-6 bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl h-full space-y-6">
+                <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed">
                   Have an opportunity, question, or just want to say hi? I'd love to hear from you.
                 </p>
                 <div className="space-y-4">
-                  <a href={SOCIAL_LINKS.email} className="flex items-center gap-3 text-slate-300 hover:text-cyan-400 transition">
+                  <a href={SOCIAL_LINKS.email} className="flex items-center gap-3 text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition">
                     <Mail size={18} /> <span className="text-sm">Email me</span>
                   </a>
-                  <a href={SOCIAL_LINKS.linkedin} className="flex items-center gap-3 text-slate-300 hover:text-cyan-400 transition">
+                  <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition">
                     <Linkedin size={18} /> <span className="text-sm">LinkedIn</span>
                   </a>
-                  <a href={SOCIAL_LINKS.github} className="flex items-center gap-3 text-slate-300 hover:text-cyan-400 transition">
+                  <a href={SOCIAL_LINKS.github} className="flex items-center gap-3 text-stone-600 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition">
                     <Github size={18} /> <span className="text-sm">GitHub</span>
                   </a>
                 </div>
               </div>
             </Reveal>
             <Reveal className="md:col-span-3" delay={150}>
-              <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-8">
+              <div className="bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-8">
                 {formSubmitted ? (
                   <div className="text-center py-8">
-                    <p className="text-cyan-400 text-lg mb-2">✓ Message sent!</p>
-                    <p className="text-slate-300">Thanks for reaching out. I'll get back to you soon.</p>
+                    <p className="text-amber-700 dark:text-amber-400 text-lg mb-2">✓ Message sent!</p>
+                    <p className="text-stone-600 dark:text-stone-300">Thanks for reaching out. I'll get back to you soon.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} className="space-y-5">
                     <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-2">Name</label>
+                      <label className="block text-stone-700 dark:text-stone-300 text-sm font-semibold mb-2">Name</label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400"
+                        className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-700 border border-stone-300 dark:border-stone-600 rounded-lg text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:border-amber-500"
                         placeholder="Your name"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-2">Email</label>
+                      <label className="block text-stone-700 dark:text-stone-300 text-sm font-semibold mb-2">Email</label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400"
+                        className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-700 border border-stone-300 dark:border-stone-600 rounded-lg text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:border-amber-500"
                         placeholder="your@email.com"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-300 text-sm font-semibold mb-2">Message</label>
+                      <label className="block text-stone-700 dark:text-stone-300 text-sm font-semibold mb-2">Message</label>
                       <textarea
                         name="message"
                         value={formData.message}
                         onChange={handleFormChange}
                         required
                         rows="5"
-                        className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400"
+                        className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-700 border border-stone-300 dark:border-stone-600 rounded-lg text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:border-amber-500"
                         placeholder="Tell me about your opportunity or just say hi!"
                       />
                     </div>
                     <button
                       type="submit"
-                      className="w-full px-8 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-semibold transition"
+                      className="w-full px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-semibold transition"
                     >
                       Send Message
                     </button>
@@ -583,16 +667,16 @@ export default function Portfolio() {
         </section>
       </main>
 
-      <footer className="border-t border-slate-800 bg-slate-900/50 py-8">
-        <div className="max-w-6xl mx-auto px-4 text-center text-slate-400 text-sm">
-          <p>© 2026 Christian Data. Built with React & Tailwind. Deployed on Vercel.</p>
+      <footer className="border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900/50 py-8">
+        <div className="max-w-6xl mx-auto px-4 text-center text-stone-500 dark:text-stone-400 text-sm">
+          <p>© 2026 Christian Agbugba. Built with React & Tailwind. Deployed on Vercel.</p>
         </div>
       </footer>
 
       {showBackToTop && (
         <button
           onClick={() => scrollToSection('home')}
-          className="fixed bottom-6 right-6 w-11 h-11 rounded-full bg-cyan-500 hover:bg-cyan-600 flex items-center justify-center shadow-lg transition z-40"
+          className="fixed bottom-6 right-6 w-11 h-11 rounded-full bg-amber-600 hover:bg-amber-700 text-white flex items-center justify-center shadow-lg transition z-40"
           aria-label="Back to top"
         >
           <ArrowUp size={20} />
