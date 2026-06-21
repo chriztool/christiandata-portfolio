@@ -17,6 +17,7 @@ import {
   Moon,
   Rocket,
   Users,
+  Download,
 } from 'lucide-react';
 
 const NAV_LINKS = [
@@ -87,32 +88,9 @@ const JOURNEY = [
   },
 ];
 
-const PROJECTS = [
-  {
-    id: 1,
-    title: 'Sales Data Dashboard',
-    description: 'Built interactive SQL queries to analyze quarterly sales trends. Used GROUP BY and JOINs to aggregate data across multiple tables.',
-    tags: ['SQL', 'PostgreSQL', 'Data Analysis'],
-    link: '#',
-    image: '📊',
-  },
-  {
-    id: 2,
-    title: 'Customer Retention Analysis',
-    description: 'Created a case study analyzing customer churn patterns using WHERE clauses and aggregate functions. Identified key retention drivers.',
-    tags: ['SQL', 'Analytics', 'Case Study'],
-    link: '#',
-    image: '📈',
-  },
-  {
-    id: 3,
-    title: 'Inventory Optimization',
-    description: 'Wrote complex SQL joins to track inventory levels across warehouses. Generated reports for supply chain optimization.',
-    tags: ['SQL', 'JOINs', 'Reporting'],
-    link: '#',
-    image: '📦',
-  },
-];
+// Add your real projects here as you build them. Example shape:
+// { id: 1, title: 'Project Name', description: '...', tags: ['SQL', 'PostgreSQL'], link: 'https://...', image: '📊' }
+const PROJECTS = [];
 
 const BLOG_POSTS = [
   {
@@ -265,16 +243,14 @@ export default function Portfolio() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // Form submission via Formspree (free service)
-    fetch('https://formspree.io/f/YOUR_FORM_ID', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    }).then(() => {
-      setFormSubmitted(true);
-      setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setFormSubmitted(false), 3000);
-    });
+    // Opens the visitor's email client with the message pre-filled, addressed to you.
+    // To switch to an in-page form later, sign up at formspree.io and replace this with a fetch() call.
+    const subject = encodeURIComponent(`Portfolio contact from ${formData.name}`);
+    const body = encodeURIComponent(`${formData.message}\n\n— ${formData.name} (${formData.email})`);
+    window.location.href = `mailto:ogemdichris@yahoo.com?subject=${subject}&body=${body}`;
+    setFormSubmitted(true);
+    setFormData({ name: '', email: '', message: '' });
+    setTimeout(() => setFormSubmitted(false), 4000);
   };
 
   return (
@@ -316,6 +292,13 @@ export default function Portfolio() {
                   {link.label}
                 </button>
               ))}
+              <a
+                href="/resume.pdf"
+                download
+                className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-lg transition"
+              >
+                <Download size={15} /> Resume
+              </a>
             </div>
 
             <div className="flex items-center gap-3 md:hidden">
@@ -336,6 +319,13 @@ export default function Portfolio() {
                   {link.label}
                 </button>
               ))}
+              <a
+                href="/resume.pdf"
+                download
+                className="flex items-center gap-1.5 mx-4 mt-2 px-4 py-2 justify-center bg-amber-600 text-white text-sm font-semibold rounded-lg"
+              >
+                <Download size={15} /> Resume
+              </a>
             </div>
           )}
         </div>
@@ -521,33 +511,40 @@ export default function Portfolio() {
           <Reveal>
             <SectionHeading eyebrow="What I've built" title="Projects" />
           </Reveal>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PROJECTS.map((project, i) => (
-              <Reveal key={project.id} delay={i * 100}>
-                <div className="bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-6 h-full hover:border-amber-400 hover:-translate-y-1 transition duration-300">
-                  <div className="text-4xl mb-4">{project.image}</div>
-                  <h3 className="text-xl font-semibold mb-3 text-amber-700 dark:text-amber-400">{project.title}</h3>
-                  <p className="text-stone-600 dark:text-stone-300 mb-4 text-sm leading-relaxed">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-stone-100 dark:bg-stone-700 text-xs rounded-full text-stone-600 dark:text-stone-300">
-                        {tag}
-                      </span>
-                    ))}
+          {PROJECTS.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {PROJECTS.map((project, i) => (
+                <Reveal key={project.id} delay={i * 100}>
+                  <div className="bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-6 h-full hover:border-amber-400 hover:-translate-y-1 transition duration-300">
+                    <div className="text-4xl mb-4">{project.image}</div>
+                    <h3 className="text-xl font-semibold mb-3 text-amber-700 dark:text-amber-400">{project.title}</h3>
+                    <p className="text-stone-600 dark:text-stone-300 mb-4 text-sm leading-relaxed">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="px-3 py-1 bg-stone-100 dark:bg-stone-700 text-xs rounded-full text-stone-600 dark:text-stone-300">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <a href={project.link} className="text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 flex items-center gap-2 transition text-sm font-medium">
+                      View Details <ExternalLink size={14} />
+                    </a>
                   </div>
-                  <a href={project.link} className="text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 flex items-center gap-2 transition text-sm font-medium">
-                    View Details <ExternalLink size={14} />
-                  </a>
-                </div>
-              </Reveal>
-            ))}
-            <Reveal delay={PROJECTS.length * 100}>
-              <div className="border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-xl p-6 h-full flex flex-col items-center justify-center text-center text-stone-500 dark:text-stone-400">
-                <Sparkles size={28} className="text-stone-400 dark:text-stone-500 mb-3" />
-                <p className="text-sm">More projects coming as I keep building. Check back soon!</p>
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <Reveal>
+              <div className="border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-xl p-12 flex flex-col items-center justify-center text-center">
+                <Sparkles size={32} className="text-stone-400 dark:text-stone-500 mb-4" />
+                <p className="text-stone-600 dark:text-stone-300 font-medium mb-1">Projects coming soon</p>
+                <p className="text-stone-500 dark:text-stone-400 text-sm max-w-md">
+                  I'm currently working through my SQL &amp; analytics certificate. Real projects will be added here as
+                  I build them, just check back soon.
+                </p>
               </div>
             </Reveal>
-          </div>
+          )}
         </section>
 
         <section id="blog" className="max-w-4xl mx-auto px-4 py-24">
@@ -574,6 +571,24 @@ export default function Portfolio() {
               </Reveal>
             ))}
           </div>
+        </section>
+
+        <section className="max-w-4xl mx-auto px-4 py-16">
+          <Reveal>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-8 bg-amber-600 rounded-2xl">
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-1">Want the full picture?</h3>
+                <p className="text-amber-50">Download my resume for the complete work history and education.</p>
+              </div>
+              <a
+                href="/resume.pdf"
+                download
+                className="flex items-center gap-2 px-6 py-3 bg-white text-amber-700 font-semibold rounded-lg hover:bg-amber-50 transition whitespace-nowrap"
+              >
+                <Download size={18} /> Download Resume
+              </a>
+            </div>
+          </Reveal>
         </section>
 
         <section id="contact" className="max-w-5xl mx-auto px-4 py-24">
@@ -603,8 +618,8 @@ export default function Portfolio() {
               <div className="bg-white dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-8">
                 {formSubmitted ? (
                   <div className="text-center py-8">
-                    <p className="text-amber-700 dark:text-amber-400 text-lg mb-2">✓ Message sent!</p>
-                    <p className="text-stone-600 dark:text-stone-300">Thanks for reaching out. I'll get back to you soon.</p>
+                    <p className="text-amber-700 dark:text-amber-400 text-lg mb-2">✓ Opening your email app...</p>
+                    <p className="text-stone-600 dark:text-stone-300">Finish sending from there and I'll get back to you soon.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} className="space-y-5">
