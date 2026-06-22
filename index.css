@@ -42,3 +42,8 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
 }
+
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
