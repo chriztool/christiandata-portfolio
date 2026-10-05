@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Christian // Dawn Run</title>
+<title>kris2reel // Live gaming streams</title>
+<meta name="description" content="kris2reel — live FC27, Warzone and GTA6 streams from Burnaby, BC. Live Mon, Tue, Thu, Fri and Sat at 9:00 AM BC time, evening prime time in Nigeria.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,10 +17,11 @@
     --line-strong: rgba(237,234,226,0.18);
     --text: #EDEAE2;
     --muted: #8B93A6;
-    --dawn-amber: #FF8A3D;
-    --dawn-coral: #FF5C7A;
+    --amber: #FF8A3D;
+    --coral: #FF5C7A;
     --pitch: #3ED598;
     --violet: #8B7FF5;
+    --cyan: #4FD8FF;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -43,8 +45,8 @@
     border-bottom:1px solid var(--line);
   }
   nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
-  .brand{ font-family:'Anton',sans-serif; font-size:20px; letter-spacing:0.02em; }
-  .brand span{ color:var(--dawn-amber); }
+  .brand{ font-family:'Anton',sans-serif; font-size:20px; letter-spacing:0.04em; }
+  .brand span{ color:var(--amber); }
   .navlinks{ display:flex; gap:28px; font-size:13px; color:var(--muted); }
   .navlinks a:hover{ color:var(--text); }
   .live-pill{
@@ -54,119 +56,280 @@
     color:var(--muted);
   }
   .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--muted); }
-  .live-pill.on .live-dot{ background:var(--pitch); box-shadow:0 0 0 3px rgba(62,213,152,0.18); }
+  .live-pill.on .live-dot{ background:var(--pitch); box-shadow:0 0 0 3px rgba(62,213,152,0.18); animation:pulse 1.4s ease-in-out infinite; }
   .live-pill.on{ color:var(--pitch); border-color:rgba(62,213,152,0.35); }
+  @keyframes pulse{ 50%{ box-shadow:0 0 0 6px rgba(62,213,152,0); } }
 
-  /* ---------- HERO ---------- */
+  /* ---------- HERO (animated) ---------- */
   .hero{
     position:relative;
-    padding:120px 0 100px;
+    min-height:calc(100vh - 64px);
+    min-height:calc(100svh - 64px);
+    display:flex; flex-direction:column; justify-content:center;
+    padding:90px 0 120px;
     overflow:hidden;
     background:
-      radial-gradient(ellipse 900px 400px at 50% 100%, rgba(255,138,61,0.16), transparent 70%),
-      linear-gradient(180deg, #0A0E1A 0%, #0D1220 100%);
+      radial-gradient(ellipse 70% 45% at 50% 64%, rgba(255,92,122,0.18), transparent 70%),
+      linear-gradient(180deg, #070A14 0%, #0D1022 55%, #120E22 100%);
   }
-  .horizon-line{
-    position:absolute; left:0; right:0; bottom:0; height:1px;
-    background:linear-gradient(90deg, transparent, var(--dawn-amber), var(--dawn-coral), transparent);
-    opacity:0.6;
+  #heroCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block; }
+  .hero::after{ /* scanlines */
+    content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:repeating-linear-gradient(180deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay;
   }
-  .hero-inner{ position:relative; z-index:2; text-align:center; }
+  .hero-inner{ position:relative; z-index:3; text-align:center; }
   .eyebrow{
-    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.12em;
-    color:var(--dawn-amber); text-transform:uppercase; margin-bottom:20px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.14em;
+    color:var(--amber); text-transform:uppercase; margin-bottom:18px;
+    opacity:0; animation:rise .8s .2s ease-out forwards;
   }
   h1.display{
-    font-size:clamp(48px, 9vw, 92px);
-    line-height:0.95;
-    background:linear-gradient(100deg, #EDEAE2 20%, var(--dawn-amber) 55%, var(--dawn-coral) 85%);
+    position:relative; display:inline-block;
+    font-size:clamp(56px, 13vw, 150px);
+    line-height:0.92; letter-spacing:0.02em;
+    background:linear-gradient(100deg, #EDEAE2 15%, var(--amber) 50%, var(--coral) 85%);
+    background-size:200% 100%;
     -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 28px rgba(255,92,122,0.35));
+    opacity:0; animation:rise .9s .35s ease-out forwards, sheen 6s 1.2s linear infinite;
   }
+  .glitch::before, .glitch::after{
+    content:attr(data-text); position:absolute; inset:0;
+    -webkit-text-fill-color:currentColor; background:none;
+    opacity:0; pointer-events:none;
+  }
+  .glitch::before{ color:var(--cyan); animation:glitchA 4.5s 1.5s infinite steps(1); }
+  .glitch::after{ color:var(--coral); animation:glitchB 4.5s 1.5s infinite steps(1); }
+  @keyframes glitchA{
+    0%,86%,100%{ opacity:0; transform:none; clip-path:inset(0 0 0 0); }
+    87%{ opacity:.85; transform:translate(-6px,2px); clip-path:inset(10% 0 62% 0); }
+    89%{ opacity:.85; transform:translate(5px,-2px); clip-path:inset(55% 0 20% 0); }
+    91%{ opacity:.85; transform:translate(-3px,0); clip-path:inset(30% 0 45% 0); }
+    93%{ opacity:0; }
+  }
+  @keyframes glitchB{
+    0%,86%,100%{ opacity:0; transform:none; clip-path:inset(0 0 0 0); }
+    87%{ opacity:.8; transform:translate(6px,-2px); clip-path:inset(60% 0 8% 0); }
+    89%{ opacity:.8; transform:translate(-5px,2px); clip-path:inset(5% 0 70% 0); }
+    92%{ opacity:.8; transform:translate(3px,1px); clip-path:inset(40% 0 35% 0); }
+    94%{ opacity:0; }
+  }
+  @keyframes sheen{ 0%{ background-position:0% 0; } 50%{ background-position:100% 0; } 100%{ background-position:0% 0; } }
+  @keyframes rise{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:none; } }
+
+  .now-playing{
+    margin-top:18px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted);
+    opacity:0; animation:rise .8s .55s ease-out forwards;
+  }
+  .now-playing .np-game{ color:var(--text); }
+  .now-playing .caret{ display:inline-block; width:8px; height:14px; background:var(--amber); vertical-align:-2px; margin-left:2px; animation:blink 1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
   .hero-sub{
-    max-width:560px; margin:22px auto 0; color:var(--muted); font-size:16px;
+    max-width:560px; margin:16px auto 0; color:#A8AFC0; font-size:16px;
+    opacity:0; animation:rise .8s .7s ease-out forwards;
   }
-  .hero-cta{ display:flex; gap:12px; justify-content:center; margin-top:34px; flex-wrap:wrap; }
+  .hero-cta{ display:flex; gap:12px; justify-content:center; margin-top:30px; flex-wrap:wrap; opacity:0; animation:rise .8s .85s ease-out forwards; }
   .btn{
     font-size:14px; font-weight:500; padding:12px 22px; border-radius:8px;
-    border:1px solid var(--line-strong); transition:all .15s ease;
+    border:1px solid var(--line-strong); transition:all .15s ease; display:inline-block;
   }
-  .btn-primary{ background:linear-gradient(100deg, var(--dawn-amber), var(--dawn-coral)); color:#1A0D06; border:none; }
-  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-primary{ background:linear-gradient(100deg, var(--amber), var(--coral)); color:#1A0D06; border:none; box-shadow:0 8px 30px -8px rgba(255,92,122,0.55); }
+  .btn-primary:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+  .btn-ghost{ background:rgba(10,14,26,0.55); backdrop-filter:blur(6px); }
   .btn-ghost:hover{ background:var(--surface); border-color:var(--line-strong); }
-  .langs{ margin-top:28px; display:flex; gap:10px; justify-content:center; }
+  .langs{ margin-top:26px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; opacity:0; animation:rise .8s 1s ease-out forwards; }
   .tag{
     font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted);
-    padding:5px 10px; border:1px solid var(--line); border-radius:6px;
+    padding:5px 10px; border:1px solid var(--line); border-radius:6px; background:rgba(10,14,26,0.5);
   }
+
+  /* HUD corners */
+  .hud{ position:absolute; z-index:2; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; color:rgba(237,234,226,0.45); text-transform:uppercase; pointer-events:none; }
+  .hud::before{ content:''; position:absolute; width:22px; height:22px; border-color:rgba(255,138,61,0.6); border-style:solid; }
+  .hud.tl{ top:22px; left:24px; padding:8px 0 0 12px; } .hud.tl::before{ top:0; left:0; border-width:2px 0 0 2px; }
+  .hud.tr{ top:22px; right:24px; padding:8px 12px 0 0; text-align:right; } .hud.tr::before{ top:0; right:0; border-width:2px 2px 0 0; }
+  .hud.bl{ bottom:64px; left:24px; padding:0 0 8px 12px; } .hud.bl::before{ bottom:0; left:0; border-width:0 0 2px 2px; }
+  .hud.br{ bottom:64px; right:24px; padding:0 12px 8px 0; text-align:right; } .hud.br::before{ bottom:0; right:0; border-width:0 2px 2px 0; }
+  .rec{ color:var(--coral); }
+  .rec i{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--coral); margin-right:6px; animation:blink 1.2s steps(1) infinite; }
+
+  /* Ticker */
+  .ticker{
+    position:absolute; left:0; right:0; bottom:0; z-index:3; overflow:hidden;
+    border-top:1px solid rgba(255,138,61,0.35);
+    background:linear-gradient(90deg, rgba(255,138,61,0.10), rgba(255,92,122,0.10));
+    backdrop-filter:blur(4px);
+  }
+  .ticker-track{ display:flex; width:max-content; animation:tick 38s linear infinite; }
+  .ticker-track span{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    padding:12px 0; white-space:nowrap; color:var(--text);
+  }
+  .ticker-track b{ color:var(--amber); font-weight:500; padding:0 18px; }
+  @keyframes tick{ to{ transform:translateX(-50%); } }
 
   /* ---------- SECTION HEADER ---------- */
   .sec{ padding:80px 0; border-top:1px solid var(--line); }
   .sec-head{ margin-bottom:44px; }
   .sec-eyebrow{
-    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--dawn-amber);
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--amber);
     letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;
   }
   .sec-title{ font-size:clamp(26px,4vw,36px); }
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
 
-  /* ---------- DAWN RUN SCHEDULE (signature element) ---------- */
-  .horizon-card{
+  /* ---------- SCHEDULE ---------- */
+  .schedule-card{
     background:var(--surface); border:1px solid var(--line); border-radius:16px;
     padding:40px clamp(20px,4vw,48px); position:relative; overflow:hidden;
   }
-  .arc-wrap{ position:relative; height:150px; margin-bottom:8px; }
-  .tz-row{ display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .tz-row{ display:flex; justify-content:space-between; gap:12px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); }
+  .tz-row .pt{ color:var(--amber); } .tz-row .wat{ color:var(--pitch); }
   .schedule-grid{
-    margin-top:32px; display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px;
+    margin-top:28px; display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px;
   }
   .slot{
     border:1px solid var(--line); border-radius:10px; padding:16px;
-    background:var(--surface-2);
+    background:var(--surface-2); position:relative; transition:border-color .2s ease, transform .2s ease;
   }
-  .slot .day{ font-size:13px; font-weight:600; margin-bottom:8px; }
-  .slot .time-pt{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--dawn-amber); }
-  .slot .time-wat{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--pitch); margin-top:2px; }
-  .slot .game{ font-size:12px; color:var(--muted); margin-top:8px; }
+  .slot:hover{ transform:translateY(-2px); border-color:var(--line-strong); }
+  .slot .day{ font-size:14px; font-weight:600; margin-bottom:8px; }
+  .slot .time-pt{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--amber); }
+  .slot .time-wat{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--pitch); margin-top:2px; }
+  .slot.next{ border-color:rgba(255,138,61,0.6); box-shadow:0 0 0 1px rgba(255,138,61,0.25), 0 10px 30px -12px rgba(255,138,61,0.45); }
+  .slot .next-badge{
+    display:none; position:absolute; top:-9px; right:12px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
+    background:linear-gradient(100deg,var(--amber),var(--coral)); color:#1A0D06; padding:2px 8px; border-radius:20px;
+  }
+  .slot.next .next-badge{ display:block; }
+  .next-line{ margin-top:22px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); }
+  .next-line span{ color:var(--text); }
 
   /* ---------- GAMES ---------- */
-  .games-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; }
+  .games-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
   .game-card{
     border:1px solid var(--line); border-radius:14px; padding:26px;
-    background:var(--surface); position:relative; overflow:hidden;
+    background:var(--surface); position:relative; overflow:hidden; transition:transform .2s ease, border-color .2s ease;
   }
-  .game-card::before{
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
-  }
+  .game-card:hover{ transform:translateY(-3px); border-color:var(--line-strong); }
+  .game-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; }
   .game-card.fc::before{ background:var(--pitch); }
   .game-card.wz::before{ background:var(--violet); }
-  .game-card.gta::before{ background:linear-gradient(90deg,var(--dawn-amber),var(--dawn-coral)); }
+  .game-card.gta::before{ background:linear-gradient(90deg,var(--amber),var(--coral)); }
   .game-card.variety::before{ background:#F5C86B; }
   .game-label{ font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
   .game-card.fc .game-label{ color:var(--pitch); }
   .game-card.wz .game-label{ color:var(--violet); }
-  .game-card.gta .game-label{ color:var(--dawn-amber); }
+  .game-card.gta .game-label{ color:var(--amber); }
   .game-card.variety .game-label{ color:#F5C86B; }
   .game-name{ font-family:'Anton',sans-serif; font-size:26px; margin-bottom:8px; text-transform:uppercase; }
   .game-desc{ font-size:13px; color:var(--muted); }
   .countdown{ font-family:'JetBrains Mono',monospace; font-size:13px; margin-top:14px; color:var(--text); }
 
   /* ---------- APPS ---------- */
-  .apps-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; }
   .app-card{
-    border:1px solid var(--line); border-radius:14px; padding:26px;
+    border:1px solid var(--line); border-radius:16px; padding:30px;
     background:var(--surface); position:relative; overflow:hidden;
-    display:flex; flex-direction:column;
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.35fr); gap:32px; align-items:center;
   }
-  .app-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--violet); }
-  .app-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
-  .app-name{ font-family:'Anton',sans-serif; font-size:26px; text-transform:uppercase; }
-  .app-platform{
+  .app-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#C8913A,#F2D27A,#C8913A); }
+  .app-top{ display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .app-name{ font-family:'Anton',sans-serif; font-size:32px; text-transform:uppercase; }
+  .app-platform, .app-version{
     font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted);
     padding:4px 10px; border:1px solid var(--line-strong); border-radius:20px; white-space:nowrap;
   }
-  .app-tagline{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--violet); margin-bottom:10px; }
-  .app-desc{ font-size:13px; color:var(--muted); margin-bottom:20px; flex-grow:1; }
-  .app-links{ display:flex; gap:10px; flex-wrap:wrap; }
-  .app-links .btn{ padding:10px 18px; font-size:13px; }
+  .app-version{ color:#F2D27A; border-color:rgba(242,210,122,0.4); }
+  .app-tagline{ font-family:'JetBrains Mono',monospace; font-size:12px; color:#F2D27A; margin-bottom:12px; }
+  .app-desc{ font-size:14px; color:var(--muted); margin-bottom:14px; }
+  .app-feats{ list-style:none; margin-bottom:22px; display:grid; gap:6px; }
+  .app-feats li{ font-size:13px; color:#B9C0CF; padding-left:18px; position:relative; }
+  .app-feats li::before{ content:''; position:absolute; left:0; top:8px; width:8px; height:8px; border-radius:2px; background:linear-gradient(135deg,#C8913A,#F2D27A); }
+  .app-links{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .app-links .btn{ padding:12px 20px; font-size:14px; }
+  .btn-gold{ background:linear-gradient(100deg,#C8913A,#F2D27A); color:#1E1406; border:none; font-weight:600; box-shadow:0 8px 26px -10px rgba(242,210,122,0.6); }
+  .btn-gold:hover{ filter:brightness(1.06); transform:translateY(-1px); }
+  .app-note{ font-size:11px; color:var(--muted); margin-top:10px; font-family:'JetBrains Mono',monospace; }
+
+  /* 9jaCut animated demo */
+  .demo{ border:1px solid var(--line-strong); border-radius:12px; overflow:hidden; background:#0B0F1C; box-shadow:0 30px 60px -30px rgba(0,0,0,0.8); font-family:'JetBrains Mono',monospace; }
+  .demo-bar{ display:flex; align-items:center; gap:10px; padding:8px 12px; background:#111729; border-bottom:1px solid var(--line); font-size:11px; color:var(--muted); }
+  .demo-bar .dots{ display:flex; gap:5px; } .demo-bar .dots i{ width:8px; height:8px; border-radius:50%; background:#2A3350; }
+  .demo-bar .ttl{ flex:1; color:#F2D27A; }
+  .demo-export{ padding:3px 10px; border-radius:5px; background:#1C2440; color:var(--text); transition:background .3s ease; }
+  .demo.s6 .demo-export{ background:linear-gradient(100deg,#C8913A,#F2D27A); color:#1E1406; }
+  .demo-body{ display:grid; grid-template-columns:76px 1fr; min-height:0; }
+  .demo-tools{ border-right:1px solid var(--line); padding:8px 6px; display:flex; flex-direction:column; gap:4px; }
+  .demo-tools span{ font-size:9.5px; color:var(--muted); padding:5px 6px; border-radius:5px; transition:all .25s ease; }
+  .demo-tools span.on{ background:rgba(242,210,122,0.14); color:#F2D27A; }
+  .demo-stage{ padding:12px; display:flex; align-items:center; justify-content:center; background:#080B15; }
+  .stage-box{ width:100%; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; position:relative; }
+  .frame{
+    position:relative; height:100%; width:100%; overflow:hidden; border-radius:4px;
+    transition:width .9s cubic-bezier(.6,0,.2,1), filter .6s ease;
+    background:
+      radial-gradient(circle at 50% 50%, transparent 17%, rgba(255,255,255,0.5) 17.5%, transparent 18.3%),
+      linear-gradient(90deg, transparent calc(50% - 1px), rgba(255,255,255,0.5) calc(50% - 1px), rgba(255,255,255,0.5) calc(50% + 1px), transparent calc(50% + 1px)),
+      repeating-linear-gradient(90deg, #1E6B3E 0 10%, #237847 10% 20%);
+    filter:saturate(.75) brightness(.85);
+  }
+  .demo.s3 .frame{ width:31.64%; }
+  .demo.s5 .frame{ filter:saturate(1.5) contrast(1.15) brightness(1.02); }
+  .ball{ position:absolute; width:7%; aspect-ratio:1; border-radius:50%; background:#fff; box-shadow:0 2px 0 rgba(0,0,0,0.3); top:58%; left:10%; animation:ball 2.6s ease-in-out infinite alternate; }
+  .player-dot{ position:absolute; width:5%; aspect-ratio:1; border-radius:50%; top:40%; }
+  .player-dot.a{ background:var(--coral); left:30%; animation:pdA 2.6s ease-in-out infinite alternate; }
+  .player-dot.b{ background:var(--cyan); left:62%; top:55%; animation:pdB 2.6s ease-in-out infinite alternate; }
+  @keyframes ball{ 0%{ left:12%; top:60%; } 50%{ left:46%; top:38%; } 100%{ left:82%; top:52%; } }
+  @keyframes pdA{ to{ left:44%; top:34%; } } @keyframes pdB{ to{ left:76%; top:48%; } }
+  .cap{
+    position:absolute; left:50%; bottom:12%; transform:translate(-50%,10px) scale(.9); opacity:0;
+    font-family:'Anton',sans-serif; font-size:clamp(11px,2.2vw,16px); letter-spacing:0.03em; color:#fff; white-space:nowrap;
+    background:rgba(0,0,0,0.55); padding:2px 8px; border-radius:4px; transition:all .4s cubic-bezier(.3,1.6,.5,1);
+  }
+  .cap em{ font-style:normal; color:#F2D27A; }
+  .demo.s4 .cap{ opacity:1; transform:translate(-50%,0) scale(1); }
+  .ratio-badge{ position:absolute; top:6px; left:6px; font-size:9px; padding:2px 6px; border-radius:4px; background:rgba(0,0,0,0.6); color:#fff; }
+  .export-overlay{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:rgba(8,11,21,0.82); opacity:0; transition:opacity .3s ease; font-size:10px; color:var(--text); }
+  .demo.s6 .export-overlay{ opacity:1; }
+  .prog{ width:70%; height:5px; border-radius:4px; background:#1C2440; overflow:hidden; }
+  .prog i{ display:block; height:100%; width:0; background:linear-gradient(90deg,#C8913A,#F2D27A); }
+  .demo.s6 .prog i{ width:100%; transition:width 1.8s ease-in-out; }
+  .done{ color:var(--pitch); opacity:0; transition:opacity .3s ease 1.8s; }
+  .demo.s6 .done{ opacity:1; }
+
+  .demo-timeline{ border-top:1px solid var(--line); padding:10px 12px 12px; background:#0D1222; position:relative; }
+  .track{ position:relative; height:22px; margin-bottom:5px; border-radius:4px; background:rgba(255,255,255,0.03); }
+  .track:last-child{ margin-bottom:0; }
+  .tlabel{ position:absolute; left:-2px; top:50%; transform:translateY(-50%); font-size:8px; color:#56607A; }
+  .clip{
+    position:absolute; top:2px; bottom:2px; border-radius:3px;
+    background:linear-gradient(180deg,#3A4C86,#2B3A6C); border:1px solid rgba(255,255,255,0.15);
+    opacity:0; transform:translateY(-8px); transition:all .45s ease, left .45s ease;
+  }
+  .demo.s1 .clip{ opacity:1; transform:none; }
+  .clip.c1{ left:0; width:22%; transition-delay:0s; }
+  .clip.c2{ left:22%; width:23%; transition-delay:0s; }
+  .clip.c3{ left:46%; width:30%; transition-delay:.15s; background:linear-gradient(180deg,#5A3E86,#43306A); }
+  .clip.c4{ left:77%; width:23%; transition-delay:.3s; background:linear-gradient(180deg,#2E6F5E,#22584A); }
+  .demo.s2 .clip.c2{ left:23%; width:22%; transition-delay:0s; }
+  .demo.s2 .clip.c1, .demo.s2 .clip.c2{ border-color:#F2D27A; }
+  .demo.s3 .clip.c1, .demo.s3 .clip.c2{ border-color:rgba(255,255,255,0.15); }
+  .chip{ position:absolute; top:2px; bottom:2px; border-radius:3px; font-size:8px; line-height:16px; padding:0 5px; color:#1E1406; opacity:0; transform:scaleX(0); transform-origin:left; transition:all .4s ease; white-space:nowrap; overflow:hidden; }
+  .chip.capchip{ left:23%; width:22%; background:#F2D27A; }
+  .demo.s4 .chip.capchip{ opacity:1; transform:none; }
+  .chip.music{ left:0; width:100%; background:linear-gradient(90deg,rgba(62,213,152,0.55),rgba(62,213,152,0.35)); color:#062016; }
+  .demo.s1 .chip.music{ opacity:1; transform:none; transition-delay:.45s; }
+  .playhead{ position:absolute; top:6px; bottom:8px; width:2px; background:var(--coral); left:12px; z-index:3; transition:left 1.2s linear; box-shadow:0 0 8px var(--coral); }
+  .playhead::before{ content:''; position:absolute; top:-4px; left:-4px; border:5px solid transparent; border-top-color:var(--coral); }
+  .key{ position:absolute; top:-26px; left:50%; transform:translateX(-50%) scale(.6); opacity:0; font-size:10px; background:#F2D27A; color:#1E1406; padding:1px 6px; border-radius:3px; transition:all .3s ease; }
+  .demo.s2:not(.s3) .key{ opacity:1; transform:translateX(-50%) scale(1); }
+
+  .demo-steps{ display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+  .demo-steps span{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted); padding:4px 9px; border:1px solid var(--line); border-radius:20px; transition:all .25s ease; }
+  .demo-steps span.on{ color:#1E1406; background:#F2D27A; border-color:#F2D27A; }
 
   /* ---------- SOCIALS ---------- */
   .social-row{ display:flex; flex-wrap:wrap; gap:12px; }
@@ -174,17 +337,15 @@
     flex:1; min-width:150px; text-align:center;
     border:1px solid var(--line); border-radius:10px; padding:18px 12px;
     background:var(--surface); font-size:13px; font-weight:500;
-    transition:border-color .15s ease;
+    transition:border-color .15s ease, transform .15s ease;
   }
-  .social-chip:hover{ border-color:var(--line-strong); }
+  .social-chip:hover{ border-color:var(--line-strong); transform:translateY(-2px); }
   .social-chip .platform{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.08em; }
 
   /* ---------- STATS / MEDIA KIT ---------- */
   .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; }
-  .stat{
-    border:1px solid var(--line); border-radius:12px; padding:20px; background:var(--surface);
-  }
-  .stat .num{ font-family:'Anton',sans-serif; font-size:32px; background:linear-gradient(100deg,var(--dawn-amber),var(--dawn-coral)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat{ border:1px solid var(--line); border-radius:12px; padding:20px; background:var(--surface); }
+  .stat .num{ font-family:'Anton',sans-serif; font-size:32px; background:linear-gradient(100deg,var(--amber),var(--coral)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   .stat .lbl{ font-size:12px; color:var(--muted); margin-top:4px; }
 
   /* ---------- CONTACT ---------- */
@@ -197,14 +358,29 @@
   .contact-card p{ color:var(--muted); max-width:440px; margin:0 auto 26px; font-size:14px; }
   .email-box{
     font-family:'JetBrains Mono',monospace; font-size:15px; display:inline-block;
-    padding:14px 24px; border:1px solid var(--line-strong); border-radius:10px; color:var(--dawn-amber);
+    padding:14px 24px; border:1px solid var(--line-strong); border-radius:10px; color:var(--amber);
+    word-break:break-all;
   }
 
   footer{ padding:36px 0; text-align:center; color:var(--muted); font-size:12px; border-top:1px solid var(--line); }
 
+  @media(max-width:860px){
+    .app-card{ grid-template-columns:1fr; }
+  }
   @media(max-width:640px){
+    .wrap{ padding:0 16px; }
     .navlinks{ display:none; }
-    .hero{ padding:90px 0 70px; }
+    .hero{ padding:70px 0 110px; }
+    .hud.bl, .hud.br{ display:none; }
+    .hud.tl{ left:16px; } .hud.tr{ right:16px; }
+    .app-card{ padding:22px 18px; }
+    .contact-card{ padding:32px 18px; }
+    .demo-body{ grid-template-columns:62px 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation-duration:0.001s !important; animation-iteration-count:1 !important; transition:none !important; }
+    .ticker-track{ animation:none; }
+    .reveal{ opacity:1; transform:none; }
   }
 </style>
 </head>
@@ -212,7 +388,7 @@
 
 <nav>
   <div class="wrap">
-    <div class="brand">CHRISTIAN<span>.</span></div>
+    <a href="#" class="brand">KRIS2REEL<span>.</span></a>
     <div class="navlinks">
       <a href="#schedule">Schedule</a>
       <a href="#games">Games</a>
@@ -228,11 +404,18 @@
   </div>
 </nav>
 
-<section class="hero">
+<section class="hero" id="top">
+  <canvas id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="hud tl" aria-hidden="true"><span class="rec"><i></i>REC</span><br>PS5 // 1080p60</div>
+  <div class="hud tr" aria-hidden="true">Burnaby, BC<br><span id="hudClock">--:--</span> PT</div>
+  <div class="hud bl" aria-hidden="true">Player 1<br>kris2reel</div>
+  <div class="hud br" aria-hidden="true">Press start<br>&#9654; schedule</div>
+
   <div class="wrap hero-inner">
-    <div class="eyebrow">Dawn Run &mdash; Streaming at sunrise, live for West Africa</div>
-    <h1 class="display">Christian</h1>
-    <p class="hero-sub">Competitive FC26. Warzone. GTA6 landing November. Streaming the early PT hours so the Dawn Run hits prime time across Nigeria.</p>
+    <div class="eyebrow">Live gaming &mdash; Burnaby, BC &rarr; Nigeria</div>
+    <h1 class="display glitch" data-text="kris2reel">kris2reel</h1>
+    <div class="now-playing">&gt; now playing: <span class="np-game" id="npGame">FC27</span><span class="caret"></span></div>
+    <p class="hero-sub">Competitive FC27. Warzone. GTA6 landing November. Live five mornings a week in BC &mdash; right in prime time across Nigeria.</p>
     <div class="hero-cta">
       <a href="#schedule" class="btn btn-primary">See the schedule</a>
       <a href="#contact" class="btn btn-ghost">Work with me</a>
@@ -243,60 +426,43 @@
       <span class="tag">AI &mdash; Claude</span>
     </div>
   </div>
-  <div class="horizon-line"></div>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
 </section>
 
 <section class="sec" id="schedule">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-eyebrow">The dawn run</div>
-      <h2 class="sec-title display">Same stream, two sunrises</h2>
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow">Stream schedule</div>
+      <h2 class="sec-title display">Live five days a week</h2>
     </div>
-    <div class="horizon-card">
+    <div class="schedule-card reveal">
       <div class="tz-row">
-        <span>Pacific Time (me)</span>
-        <span>West Africa Time (you)</span>
+        <span class="pt">BC time (me)</span>
+        <span class="wat">Nigeria time (you)</span>
       </div>
-      <div class="schedule-grid">
-        <div class="slot">
-          <div class="day">Monday</div>
-          <div class="time-pt">5:30 AM PT</div>
-          <div class="time-wat">1:30 PM WAT</div>
-          <div class="game">FC26 &mdash; ranked climb</div>
-        </div>
-        <div class="slot">
-          <div class="day">Wednesday</div>
-          <div class="time-pt">5:30 AM PT</div>
-          <div class="time-wat">1:30 PM WAT</div>
-          <div class="game">Warzone squad night</div>
-        </div>
-        <div class="slot">
-          <div class="day">Friday</div>
-          <div class="time-pt">5:30 AM PT</div>
-          <div class="time-wat">1:30 PM WAT</div>
-          <div class="game">FC26 &mdash; community games</div>
-        </div>
-        <div class="slot">
-          <div class="day">Saturday</div>
-          <div class="time-pt">6:00 AM PT</div>
-          <div class="time-wat">2:00 PM WAT</div>
-          <div class="game">Variety &mdash; long run</div>
-        </div>
+      <div class="schedule-grid" id="scheduleGrid">
+        <div class="slot" data-dow="1"><span class="next-badge">Next up</span><div class="day">Monday</div><div class="time-pt">9:00 AM PT</div><div class="time-wat">5:00 PM WAT</div></div>
+        <div class="slot" data-dow="2"><span class="next-badge">Next up</span><div class="day">Tuesday</div><div class="time-pt">9:00 AM PT</div><div class="time-wat">5:00 PM WAT</div></div>
+        <div class="slot" data-dow="4"><span class="next-badge">Next up</span><div class="day">Thursday</div><div class="time-pt">9:00 AM PT</div><div class="time-wat">5:00 PM WAT</div></div>
+        <div class="slot" data-dow="5"><span class="next-badge">Next up</span><div class="day">Friday</div><div class="time-pt">9:00 AM PT</div><div class="time-wat">5:00 PM WAT</div></div>
+        <div class="slot" data-dow="6"><span class="next-badge">Next up</span><div class="day">Saturday</div><div class="time-pt">9:00 AM PT</div><div class="time-wat">5:00 PM WAT</div></div>
       </div>
+      <div class="next-line" id="nextLine"></div>
     </div>
   </div>
 </section>
 
 <section class="sec" id="games">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-eyebrow">On rotation</div>
       <h2 class="sec-title display">What I play</h2>
     </div>
-    <div class="games-grid">
+    <div class="games-grid reveal">
       <div class="game-card fc">
         <div class="game-label">Football</div>
-        <div class="game-name">FC26</div>
+        <div class="game-name">FC27</div>
         <div class="game-desc">Chasing the Pro path through the in-game qualifiers. Competitive Ultimate Team and ranked clubs.</div>
       </div>
       <div class="game-card wz">
@@ -321,21 +487,64 @@
 
 <section class="sec" id="apps">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-eyebrow">Built by me</div>
       <h2 class="sec-title display">My Apps</h2>
     </div>
-    <div class="apps-grid">
-      <div class="app-card">
+    <div class="app-card reveal">
+      <div class="app-info">
         <div class="app-top">
-          <div class="app-name">9jacut</div>
+          <div class="app-name">9jaCut</div>
+          <div class="app-version">v2.0 &mdash; new</div>
           <div class="app-platform">Windows</div>
         </div>
-        <div class="app-tagline">Clip cutter &amp; reframer</div>
-        <div class="app-desc">Cut recordings into clips, reframe them to vertical/square for social media, add stickers and background audio, and generate 52-style promo videos &mdash; all running locally, no upload required.</div>
+        <div class="app-tagline">Free video editor for creators</div>
+        <div class="app-desc">Cut your recordings into clips, reframe them for TikTok, Reels and Shorts, and export &mdash; all on your own PC. No account, no watermark, no upload.</div>
+        <ul class="app-feats">
+          <li>Full timeline: drag, trim, split, undo</li>
+          <li>One-click 9:16, 16:9, 1:1 and 4:5</li>
+          <li>Offline auto-captions in 9 languages</li>
+          <li>Transitions, filters, text, stickers, music &amp; voiceover</li>
+          <li>Export up to 4K &middot; 52 promo video styles</li>
+        </ul>
         <div class="app-links">
-          <a href="https://github.com/chriztool/9jacut/releases/latest" target="_blank" rel="noopener" class="btn btn-primary">Download for Windows</a>
-          <a href="https://github.com/chriztool/9jacut" target="_blank" rel="noopener" class="btn btn-ghost">Source</a>
+          <a href="https://github.com/chriztool/9jacut/releases/latest/download/9jacut.exe" class="btn btn-gold">&#11015; Download 9jaCut 2.0</a>
+        </div>
+        <div class="app-note">One file, nothing to install. If Windows shows &ldquo;protected your PC&rdquo;, click More info &rarr; Run anyway.</div>
+      </div>
+
+      <div>
+        <div class="demo" id="demo" aria-label="Animated demo of 9jaCut: import, split, reframe to 9:16, captions, filter, export" role="img">
+          <div class="demo-bar"><span class="dots"><i></i><i></i><i></i></span><span class="ttl">9jaCut 2.0</span><span class="demo-export">Export</span></div>
+          <div class="demo-body">
+            <div class="demo-tools">
+              <span data-t="1">Media</span>
+              <span data-t="2">Edit</span>
+              <span data-t="3">Templates</span>
+              <span data-t="4">Captions</span>
+              <span data-t="5">Filters</span>
+              <span data-t="6">Export</span>
+            </div>
+            <div class="demo-stage">
+              <div class="stage-box">
+                <div class="frame">
+                  <div class="player-dot a"></div><div class="player-dot b"></div><div class="ball"></div>
+                  <div class="ratio-badge" id="ratioBadge">16:9</div>
+                  <div class="cap">WHAT A <em>GOAL!</em></div>
+                </div>
+                <div class="export-overlay"><div>Exporting 1080p&hellip;</div><div class="prog"><i></i></div><div class="done">&#10003; Saved clip.mp4</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-timeline">
+            <div class="playhead" id="playhead"><span class="key">S &mdash; split</span></div>
+            <div class="track"><div class="chip capchip">WHAT A GOAL!</div></div>
+            <div class="track"><div class="clip c1"></div><div class="clip c2"></div><div class="clip c3"></div><div class="clip c4"></div></div>
+            <div class="track"><div class="chip music">&#9835; music</div></div>
+          </div>
+        </div>
+        <div class="demo-steps" id="demoSteps">
+          <span data-s="1">1 Import</span><span data-s="2">2 Split</span><span data-s="3">3 Reframe 9:16</span><span data-s="4">4 Captions</span><span data-s="5">5 Filter</span><span data-s="6">6 Export</span>
         </div>
       </div>
     </div>
@@ -344,14 +553,14 @@
 
 <section class="sec" id="socials">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-eyebrow">Find me</div>
       <h2 class="sec-title display">Elsewhere online</h2>
     </div>
-    <div class="social-row">
-      <a class="social-chip" href="https://x.com/kris2reel?s=11&t=wJ5l8RQeUsevu1WhCDrobQ" target="_blank" rel="noopener"><span class="platform">X</span>Follow</a>
-      <a class="social-chip" href="https://www.tiktok.com/@kris2reel?_r=1&_t=ZS-97iN2PEKEeD" target="_blank" rel="noopener"><span class="platform">TikTok</span>Follow</a>
-      <a class="social-chip" href="https://www.instagram.com/chriztool?igsh=MXF5ODF4MTEyZWkycg%3D%3D&utm_source=qr" target="_blank" rel="noopener"><span class="platform">Instagram</span>Follow</a>
+    <div class="social-row reveal">
+      <a class="social-chip" href="https://x.com/kris2reel?s=11&t=wJ5l8RQeUsevu1WhCDrobQ" target="_blank" rel="noopener"><span class="platform">X</span>@kris2reel</a>
+      <a class="social-chip" href="https://www.tiktok.com/@kris2reel?_r=1&_t=ZS-97iN2PEKEeD" target="_blank" rel="noopener"><span class="platform">TikTok</span>@kris2reel</a>
+      <a class="social-chip" href="https://www.instagram.com/chriztool?igsh=MXF5ODF4MTEyZWkycg%3D%3D&utm_source=qr" target="_blank" rel="noopener"><span class="platform">Instagram</span>@chriztool</a>
       <a class="social-chip" href="https://www.facebook.com/share/1BJDbt8Nyi/?mibextid=wwXIfr" target="_blank" rel="noopener"><span class="platform">Facebook</span>Follow</a>
     </div>
   </div>
@@ -359,11 +568,11 @@
 
 <section class="sec" id="kit">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <div class="sec-eyebrow">Media kit</div>
       <h2 class="sec-title display">The numbers</h2>
     </div>
-    <div class="stats-grid">
+    <div class="stats-grid reveal">
       <div class="stat"><div class="num" id="stat-ig">&mdash;</div><div class="lbl">Instagram followers</div></div>
       <div class="stat"><div class="num" id="stat-fb">&mdash;</div><div class="lbl">Facebook followers</div></div>
       <div class="stat"><div class="num" id="stat-x">&mdash;</div><div class="lbl">X followers</div></div>
@@ -393,7 +602,7 @@
 
 <section class="sec" id="contact">
   <div class="wrap">
-    <div class="contact-card">
+    <div class="contact-card reveal">
       <h2 class="sec-title display">Let's work together</h2>
       <p>Sponsorships, collabs, or just want to talk football and Warzone &mdash; drop a line.</p>
       <a class="email-box" href="mailto:ogemdichris@yahoo.com">ogemdichris@yahoo.com</a>
@@ -402,29 +611,315 @@
 </section>
 
 <footer>
-  <div class="wrap">Christian &mdash; Dawn Run &copy; 2026</div>
+  <div class="wrap">kris2reel &copy; 2026</div>
 </footer>
 
 <script>
-  var target = new Date('2026-11-19T00:00:00-08:00');
-  function updateCountdown(){
-    var now = new Date();
-    var diff = target - now;
-    if(diff <= 0){ document.getElementById('gtaCountdown').textContent = 'Out now'; return; }
-    var d = Math.floor(diff / (1000*60*60*24));
-    document.getElementById('gtaCountdown').textContent = d + ' days out';
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000*60*60);
+/* ================= STREAM SCHEDULE ================= */
+/* Edit these to change the schedule. Days: 0=Sun 1=Mon ... 6=Sat. Time is BC (Pacific) time. */
+var STREAM_DAYS = [1, 2, 4, 5, 6];
+var STREAM_HOUR = 9, STREAM_MIN = 0;
+var STREAM_LENGTH_HOURS = 3;   /* how long the "Live now" badge stays on */
 
-  var pt = new Date().toLocaleString('en-US', {timeZone:'America/Los_Angeles', hour:'2-digit', hour12:false});
-  var hour = parseInt(pt,10);
-  var pill = document.getElementById('livePill');
-  var label = document.getElementById('liveLabel');
-  if(hour >= 5 && hour < 8){
-    pill.classList.add('on');
-    label.textContent = 'Live now';
+var BC_TZ = 'America/Vancouver', NG_TZ = 'Africa/Lagos';
+
+function partsIn(tz, date){
+  var o = {};
+  new Intl.DateTimeFormat('en-US', {timeZone:tz, year:'numeric', month:'numeric', day:'numeric', hour:'numeric', minute:'numeric', weekday:'short', hour12:false})
+    .formatToParts(date).forEach(function(p){ o[p.type] = p.value; });
+  var wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(o.weekday);
+  return { y:+o.year, m:+o.month, d:+o.day, h:(+o.hour)%24, min:+o.minute, dow:wd };
+}
+/* The exact moment of HH:MM BC time on a given BC calendar date (handles PDT/PST). */
+function bcMoment(y, m, d, h, min){
+  var guess = new Date(Date.UTC(y, m-1, d, h+7, min)); /* assume PDT (UTC-7) */
+  var p = partsIn(BC_TZ, guess);
+  if(p.h !== h) guess = new Date(guess.getTime() + 3600000); /* PST (UTC-8) */
+  return guess;
+}
+function fmtTime(tz, date){
+  return new Intl.DateTimeFormat('en-US', {timeZone:tz, hour:'numeric', minute:'2-digit', hour12:true}).format(date);
+}
+/* Next start time for each stream day */
+function upcoming(){
+  var now = new Date(), today = partsIn(BC_TZ, now), list = [];
+  for(var k = 0; k < 8; k++){
+    var base = new Date(Date.UTC(today.y, today.m-1, today.d + k, 12));
+    var dow = base.getUTCDay();
+    if(STREAM_DAYS.indexOf(dow) === -1) continue;
+    var start = bcMoment(base.getUTCFullYear(), base.getUTCMonth()+1, base.getUTCDate(), STREAM_HOUR, STREAM_MIN);
+    var end = new Date(start.getTime() + STREAM_LENGTH_HOURS*3600000);
+    if(end > now) list.push({ dow:dow, start:start, end:end });
   }
+  return list;
+}
+function renderSchedule(){
+  var list = upcoming(), now = new Date();
+  var slots = document.querySelectorAll('#scheduleGrid .slot');
+  slots.forEach(function(s){
+    var dow = +s.getAttribute('data-dow');
+    var item = list.filter(function(x){ return x.dow === dow; })[0];
+    s.classList.remove('next');
+    if(!item) return;
+    s.querySelector('.time-pt').textContent = fmtTime(BC_TZ, item.start) + ' PT';
+    var ngDay = new Intl.DateTimeFormat('en-US', {timeZone:NG_TZ, weekday:'short'}).format(item.start);
+    var bcDay = new Intl.DateTimeFormat('en-US', {timeZone:BC_TZ, weekday:'short'}).format(item.start);
+    s.querySelector('.time-wat').textContent = fmtTime(NG_TZ, item.start) + ' WAT' + (ngDay !== bcDay ? ' (' + ngDay + ')' : '');
+  });
+  var next = list[0];
+  var pill = document.getElementById('livePill'), label = document.getElementById('liveLabel');
+  var line = document.getElementById('nextLine');
+  if(next){
+    var nextSlot = document.querySelector('#scheduleGrid .slot[data-dow="' + next.dow + '"]');
+    if(nextSlot) nextSlot.classList.add('next');
+    if(now >= next.start){
+      pill.classList.add('on'); label.textContent = 'Live now';
+      line.innerHTML = '&#9679; <span>Live right now</span> &mdash; come through on X and YouTube.';
+    } else {
+      pill.classList.remove('on'); label.textContent = 'Offline';
+      var mins = Math.round((next.start - now) / 60000);
+      var dd = Math.floor(mins / 1440), hh = Math.floor((mins % 1440) / 60), mm = mins % 60;
+      var txt = (dd ? dd + 'd ' : '') + (dd || hh ? hh + 'h ' : '') + mm + 'm';
+      line.innerHTML = 'Next stream in <span>' + txt + '</span>';
+    }
+  }
+  /* Ticker + HUD clock */
+  document.getElementById('hudClock').textContent = new Intl.DateTimeFormat('en-US', {timeZone:BC_TZ, hour:'2-digit', minute:'2-digit', hour12:false}).format(now);
+  return next;
+}
+var firstNext = renderSchedule();
+setInterval(renderSchedule, 30000);
+
+(function buildTicker(){
+  var ngTime = firstNext ? fmtTime(NG_TZ, firstNext.start) : '5:00 PM';
+  var items = ['Live Mon &middot; Tue &middot; Thu &middot; Fri &middot; Sat', '9:00 AM BC time', ngTime + ' in Nigeria', 'FC27', 'Warzone', 'GTA6 day one', 'Follow @kris2reel', '9jaCut 2.0 out now'];
+  var html = items.map(function(t){ return '<span>' + t + '</span><b>&#10022;</b>'; }).join('');
+  document.getElementById('tickerTrack').innerHTML = html + html;
+})();
+
+/* ================= GTA6 COUNTDOWN ================= */
+var target = new Date('2026-11-19T00:00:00-08:00');
+function updateCountdown(){
+  var diff = target - new Date();
+  if(diff <= 0){ document.getElementById('gtaCountdown').textContent = 'Out now'; return; }
+  document.getElementById('gtaCountdown').textContent = Math.floor(diff / 86400000) + ' days out';
+}
+updateCountdown();
+setInterval(updateCountdown, 3600000);
+
+/* ================= "NOW PLAYING" TYPER ================= */
+(function(){
+  var games = ['FC27', 'Warzone', 'GTA6 (soon)', 'RDR2'], el = document.getElementById('npGame'), gi = 0, ci = games[0].length, del = true;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function step(){
+    var g = games[gi];
+    if(del){ ci--; el.textContent = g.slice(0, ci); if(ci <= 0){ del = false; gi = (gi+1) % games.length; } setTimeout(step, 60); }
+    else { var g2 = games[gi]; ci++; el.textContent = g2.slice(0, ci); if(ci >= g2.length){ del = true; setTimeout(step, 2200); } else setTimeout(step, 90); }
+  }
+  setTimeout(step, 2600);
+})();
+
+/* ================= SCROLL REVEAL ================= */
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold:0.12 });
+  els.forEach(function(e){ io.observe(e); });
+})();
+
+/* ================= HERO ANIMATION (canvas) ================= */
+(function(){
+  var canvas = document.getElementById('heroCanvas'), ctx = canvas.getContext('2d');
+  var hero = document.querySelector('.hero');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0, H = 0, dpr = 1, shapes = [], sparks = [], running = true, mx = 0, my = 0, tmx = 0, tmy = 0;
+  var COLORS = ['#FF8A3D', '#FF5C7A', '#4FD8FF', '#3ED598', '#8B7FF5'];
+  var TYPES = ['tri', 'circle', 'cross', 'square'];
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = hero.clientWidth; H = hero.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.round(Math.min(26, Math.max(12, W / 55)));
+    shapes = [];
+    for(var i = 0; i < n; i++) shapes.push(newShape(true));
+    sparks = [];
+    for(var j = 0; j < Math.round(W / 9); j++) sparks.push({ x:Math.random()*W, y:Math.random()*H, z:Math.random(), tw:Math.random()*6.28 });
+  }
+  function newShape(anywhere){
+    var z = 0.35 + Math.random() * 0.65;
+    return {
+      x: Math.random() * W, y: anywhere ? Math.random() * H : H + 40,
+      z: z, size: 8 + z * 18, type: TYPES[(Math.random() * 4) | 0],
+      color: COLORS[(Math.random() * COLORS.length) | 0],
+      rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.012, vy: 0.15 + z * 0.45
+    };
+  }
+  function drawShape(s, ox, oy){
+    var x = s.x + ox * s.z, y = s.y + oy * s.z, r = s.size;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(s.rot);
+    ctx.globalAlpha = 0.25 + s.z * 0.55;
+    ctx.strokeStyle = s.color; ctx.lineWidth = 1.5 + s.z * 1.5;
+    ctx.shadowColor = s.color; ctx.shadowBlur = 12 * s.z;
+    ctx.beginPath();
+    if(s.type === 'tri'){ ctx.moveTo(0, -r); ctx.lineTo(r * 0.87, r * 0.5); ctx.lineTo(-r * 0.87, r * 0.5); ctx.closePath(); }
+    else if(s.type === 'circle'){ ctx.arc(0, 0, r * 0.8, 0, 6.283); }
+    else if(s.type === 'square'){ ctx.rect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4); }
+    else { ctx.moveTo(-r * 0.7, -r * 0.7); ctx.lineTo(r * 0.7, r * 0.7); ctx.moveTo(r * 0.7, -r * 0.7); ctx.lineTo(-r * 0.7, r * 0.7); }
+    ctx.stroke(); ctx.restore();
+  }
+
+  function frame(t){
+    if(!running) return;
+    t = t || 0;
+    mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
+    ctx.clearRect(0, 0, W, H);
+    var hz = H * 0.66 + my * 6;           /* horizon */
+    var vx = W / 2 + mx * 30;             /* vanishing point x */
+
+    /* stars / sparks */
+    for(var i = 0; i < sparks.length; i++){
+      var p = sparks[i]; if(p.y > hz) continue;
+      var a = 0.25 + 0.45 * Math.abs(Math.sin(t * 0.0015 + p.tw));
+      ctx.fillStyle = 'rgba(237,234,226,' + (a * p.z).toFixed(3) + ')';
+      ctx.fillRect(p.x + mx * 6 * p.z, p.y, 1.4, 1.4);
+    }
+
+    /* synthwave sun with cut bands */
+    var R = Math.min(W * 0.2, H * 0.3);
+    var sy = hz - R * 0.25;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, 0, W, hz); ctx.clip();
+    var g = ctx.createLinearGradient(0, sy - R, 0, sy + R);
+    g.addColorStop(0, '#FFD27A'); g.addColorStop(0.45, '#FF8A3D'); g.addColorStop(1, '#FF2E7A');
+    ctx.globalAlpha = 0.55;
+    ctx.shadowColor = '#FF5C7A'; ctx.shadowBlur = 60;
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(vx, sy, R, 0, 6.283); ctx.fill();
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'destination-out';
+    var off = (t * 0.012) % 14;
+    for(var b = 0; b < 9; b++){
+      var by = sy - R * 0.05 + b * 14 + off - 14;
+      var bh = 1.5 + b * 0.9;
+      ctx.fillRect(vx - R - 2, by, R * 2 + 4, bh);
+    }
+    ctx.restore();
+    ctx.globalCompositeOperation = 'source-over';
+
+    /* horizon glow line */
+    var hg = ctx.createLinearGradient(0, 0, W, 0);
+    hg.addColorStop(0, 'rgba(255,92,122,0)'); hg.addColorStop(0.5, 'rgba(255,138,61,0.9)'); hg.addColorStop(1, 'rgba(255,92,122,0)');
+    ctx.fillStyle = hg; ctx.fillRect(0, hz - 1, W, 2);
+
+    /* perspective grid floor */
+    var floorH = H - hz;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, hz, W, floorH); ctx.clip();
+    var fg = ctx.createLinearGradient(0, hz, 0, H);
+    fg.addColorStop(0, 'rgba(255,92,122,0.10)'); fg.addColorStop(1, 'rgba(139,127,245,0.08)');
+    ctx.fillStyle = fg; ctx.fillRect(0, hz, W, floorH);
+    ctx.lineWidth = 1;
+    /* vertical lines converge to vanishing point */
+    var cols = 22;
+    for(var c = -cols; c <= cols; c++){
+      var bx = vx + c * (W / 9);
+      var alpha = 0.35 - Math.abs(c) / cols * 0.2;
+      ctx.strokeStyle = 'rgba(255,92,122,' + alpha.toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(vx + c * 2, hz); ctx.lineTo(bx, H); ctx.stroke();
+    }
+    /* horizontal lines moving toward viewer */
+    var rows = 16, speed = (t * 0.00035) % 1;
+    for(var r = 0; r < rows; r++){
+      var z = (r + speed) / rows;            /* 0 at horizon .. 1 near viewer */
+      var y = hz + floorH * Math.pow(z, 2.4);
+      ctx.strokeStyle = 'rgba(255,138,61,' + (0.08 + z * 0.5).toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    ctx.restore();
+
+    /* floating controller-symbol shapes */
+    for(var s = 0; s < shapes.length; s++){
+      var sh = shapes[s];
+      sh.y -= sh.vy; sh.rot += sh.vr;
+      if(sh.y < -40) shapes[s] = newShape(false);
+      drawShape(sh, mx * 40, my * 25);
+    }
+
+    /* text-legibility vignette */
+    var vg = ctx.createRadialGradient(W / 2, H * 0.45, 0, W / 2, H * 0.45, Math.max(W, H) * 0.45);
+    vg.addColorStop(0, 'rgba(7,10,20,0.55)'); vg.addColorStop(1, 'rgba(7,10,20,0)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+
+    if(!reduce) requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', function(){ resize(); if(reduce) frame(0); });
+  hero.addEventListener('pointermove', function(e){
+    var rct = hero.getBoundingClientRect();
+    tmx = (e.clientX - rct.left) / rct.width - 0.5;
+    tmy = (e.clientY - rct.top) / rct.height - 0.5;
+  });
+  hero.addEventListener('pointerleave', function(){ tmx = 0; tmy = 0; });
+
+  /* Pause when hero is off-screen (saves battery) */
+  if('IntersectionObserver' in window && !reduce){
+    new IntersectionObserver(function(en){
+      var vis = en[0].isIntersecting;
+      if(vis && !running){ running = true; requestAnimationFrame(frame); }
+      else if(!vis){ running = false; }
+    }).observe(hero);
+  }
+  resize();
+  requestAnimationFrame(frame);
+})();
+
+/* ================= 9JACUT DEMO LOOP ================= */
+(function(){
+  var demo = document.getElementById('demo'), ph = document.getElementById('playhead');
+  var badge = document.getElementById('ratioBadge');
+  var tools = demo.querySelectorAll('.demo-tools span'), steps = document.querySelectorAll('#demoSteps span');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* playhead positions (% of track) per step */
+  var PH = { 0:0, 1:4, 2:22, 3:34, 4:30, 5:42, 6:96 };
+  var DUR = [0, 1900, 1900, 2000, 2000, 1800, 3000];
+  var step = 0, timer = null, visible = false;
+
+  function setStep(n){
+    step = n;
+    demo.className = 'demo';
+    for(var i = 1; i <= n; i++) demo.classList.add('s' + i);
+    tools.forEach(function(t){ t.classList.toggle('on', +t.getAttribute('data-t') === n); });
+    steps.forEach(function(t){ t.classList.toggle('on', +t.getAttribute('data-s') === n); });
+    var tl = demo.querySelector('.demo-timeline');
+    var w = tl.clientWidth - 24;
+    ph.style.left = (12 + w * PH[n] / 100) + 'px';
+    badge.textContent = n >= 3 ? '9:16' : '16:9';
+  }
+  function next(){
+    clearTimeout(timer);
+    if(!visible) return;
+    if(step >= 6){
+      ph.style.transition = 'none'; setStep(0); void demo.offsetWidth; ph.style.transition = '';
+      timer = setTimeout(function(){ setStep(1); timer = setTimeout(next, DUR[1]); }, 500);
+      return;
+    }
+    setStep(step + 1);
+    timer = setTimeout(next, DUR[step]);
+  }
+  if(reduce){ setStep(6); return; }
+  setStep(0);
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en){
+      visible = en[0].isIntersecting;
+      if(visible && !timer) next();
+      if(!visible){ clearTimeout(timer); timer = null; }
+    }, { threshold:0.35 }).observe(demo);
+  } else { visible = true; next(); }
+  window.addEventListener('resize', function(){ setStep(step); });
+})();
 </script>
 
 </body>
